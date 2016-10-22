@@ -20,7 +20,8 @@ define fish::install( $path = '/usr/bin/fish' ) {
     cwd     => "/home/$name",
     user    => $name,
     command => "mkdir -p .config/fish && cp ${content_folder}/config.fish .config/fish/config.fish",
-    unless  => 'ls .config/fish/config.fish'
+    unless  => 'ls .config/fish/config.fish',
+    onlyif  => "test -s ${content_folder}/config.fish",
   }
 
 }
