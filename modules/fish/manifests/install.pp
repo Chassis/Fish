@@ -3,18 +3,30 @@ define fish::install (
 	$path = '/usr/bin/fish'
 ) {
 
+	if ( ! empty( $::config[disabled_extensions] ) and 'chassis/fish' in $::config[disabled_extensions] ) {
+		$package = absent
+	} else {
+		$package = latest
+	}
+
 	$content_folder = $::config[mapped_paths][content]
 
 	apt::ppa { 'ppa:fish-shell/release-2': }
 
-	exec { "chsh -s ${path} ${name}":
-		path    => '/bin:/usr/bin',
-		unless  => "grep -E '^${name}.+:${$path}$' /etc/passwd",
-		require => Package['fish']
+	if ( absent == $package ) {
+		exec { "chsh -s ${path} ${name}":
+			path    => '/bin:/usr/bin',
+			unless  => "grep -E '^${name}.+:${$path}$' /etc/passwd",
+			require => Package['fish']
+		}
+	} else {
+			exec { 'chsh -s /bin/bash':
+			path => '/bin:/usr/bin',
+			}
 	}
 
 	package { 'fish':
-		ensure  => latest,
+		ensure  => $package,
 		require => Apt::Ppa[ 'ppa:fish-shell/release-2' ],
 	}
 
