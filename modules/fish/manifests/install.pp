@@ -3,7 +3,7 @@ define fish::install (
 	$path = '/usr/bin/fish'
 ) {
 
-	if ( ! empty( $config[disabled_extensions] ) and 'chassis/fish' in $config[disabled_extensions] ) {
+	if ( ! empty( $::config[disabled_extensions] ) and 'chassis/fish' in $::config[disabled_extensions] ) {
 		$package = absent
 	} else {
 		$package = latest
@@ -20,8 +20,8 @@ define fish::install (
 			require => Package['fish']
 		}
 	} else {
-			exec { "chsh -s /bin/bash":
-			path    => '/bin:/usr/bin',
+			exec { 'chsh -s /bin/bash':
+			path => '/bin:/usr/bin',
 			}
 	}
 
