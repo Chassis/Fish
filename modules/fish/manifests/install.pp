@@ -21,7 +21,7 @@ define fish::install (
 		}
 	} else {
 			exec { 'chsh -s /bin/bash':
-			path => '/bin:/usr/bin',
+			path    => '/bin:/usr/bin',
 			require => Package['fish']
 			}
 	}
