@@ -11,7 +11,7 @@ define fish::install (
 
 	$content_folder = $::config[mapped_paths][content]
 
-	apt::ppa { 'ppa:fish-shell/release-2': }
+	apt::ppa { 'ppa:fish-shell/release-3': }
 
 	if ( absent == $package ) {
 		exec { "chsh -s ${path} ${name}":
@@ -21,13 +21,14 @@ define fish::install (
 		}
 	} else {
 			exec { 'chsh -s /bin/bash':
-			path => '/bin:/usr/bin',
+			path    => '/bin:/usr/bin',
+			require => Package['fish']
 			}
 	}
 
 	package { 'fish':
 		ensure  => $package,
-		require => Apt::Ppa[ 'ppa:fish-shell/release-2' ],
+		require => [ Apt::Ppa[ 'ppa:fish-shell/release-3' ], Class['apt::update'] ]
 	}
 
 	exec { 'custom fish config':
